@@ -1,0 +1,19 @@
+<template>
+     <div>
+          <span>{{sonValue}}</span>
+     </div>
+</template>
+<script>
+    export default {
+        data(){
+          return{
+               sonValue:"我是子组件"
+          }
+        },
+    }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+
+</style>

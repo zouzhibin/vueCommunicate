@@ -2,7 +2,14 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">父传子props传参</router-link> |
+      <router-link to="/emit">子传父emit</router-link> |
+      <router-link to="/sync">sync</router-link> |
+      <router-link to="/model">v-model</router-link> |
+      <router-link to="/parentandchildren">parentandchildren</router-link> |
+      <router-link to="/refs">refs</router-link> |
+      <router-link to="/dispatch">dispatch</router-link> |
+      <router-link to="/attrandlisteners">attrandlisteners</router-link> |
     </div>
     <router-view/>
   </div>
