@@ -65,6 +65,11 @@ export default new Router({
       path: '/attrandlisteners',
       name: 'attrandlisteners',
       component: () => import(/* webpackChunkName: "about" */ './components/attrandlisteners/parent.vue')
+    },
+    {
+      path: '/provide',
+      name: 'provide',
+      component: () => import(/* webpackChunkName: "about" */ './components/provide/parent.vue')
     }
   ]
 })

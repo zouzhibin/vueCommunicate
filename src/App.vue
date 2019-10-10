@@ -10,6 +10,7 @@
       <router-link to="/refs">refs</router-link> |
       <router-link to="/dispatch">dispatch</router-link> |
       <router-link to="/attrandlisteners">attrandlisteners</router-link> |
+      <router-link to="/provide">provide</router-link> |
     </div>
     <router-view/>
   </div>

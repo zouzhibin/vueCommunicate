@@ -481,7 +481,20 @@ v-on="$listeners"
 </script>
 ```
 
-### 第9种方法  provide/ inject
+### 第9种方法  provide / inject
+这对选项需要一起使用，以允许一个祖先组件向其所有子孙后代注入一个依赖，不论组件层次有多深，
+并在起上下游关系成立的时间里始终生效。
+如果你熟悉 React，这与 React 的上下文特性很相似。
 
+
+### 第十种 localStorage /sessionStorage
+这种方式就相对来说比较简单了，但是存储的也想对混乱，不太容易维护，因为五区分模块存储
+localStorage.getItem(key)获取数据 通过localStorage.setItem(key,value)存储数据
+```
+注意用JSON.parse() / JSON.stringify() 做数据格式转换 localStorage / sessionStorage可以结合vuex, 
+实现数据的持久保存,同时使用vuex解决数据和状态混乱问题.
+```
+
+### 第十一种 cookie 进行存储 同理如上
 
 
