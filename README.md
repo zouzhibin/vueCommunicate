@@ -745,7 +745,7 @@ Vue Router 是 Vue.js 官方的路由管理器。它和 Vue.js 的核心深度�
 ### 总结如下
 - 在父子组件之间通信：通过props传参;通过ref/$refs, 通过 $parent / $children, provide / inject , $attrs / $listeners,vuex
  v-model,.sync.....上述所有的方式都适合父子组件之间进行传参
-- 兄弟组件之间进行传参  eventbus vuex router localStorage /sessionStorage cookie
+- 兄弟组件之间进行传参  eventBus vuex router localStorage /sessionStorage cookie
 - 跨级通信 $attrs/$listeners  provide/inject   eventBus Vuex
  
 
