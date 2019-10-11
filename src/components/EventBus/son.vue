@@ -1,21 +1,21 @@
 <template>
      <div>
-          <span>{{from}}</span>
+          <span>{{sonValue}}</span>
+
      </div>
 </template>
 <script>
     export default {
-        inject:{
-          from:'foo'
-        },
-         mounted(){
-           console.log('heihe',this)
-         },
         data(){
           return{
-               sonValue:"我是子组件"
+               sonValue:"我是son1"
           }
         },
+         mounted() {
+             this.$EventBus.$on('son1',(val)=>{
+                  this.sonValue = val
+             })
+         }
     }
 </script>
 

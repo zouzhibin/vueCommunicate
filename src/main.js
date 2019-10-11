@@ -26,6 +26,9 @@ Vue.prototype.$broadcast = function (eventName,value) {
   }
   broadcast(children)
 }
+
+// 这句话的意思是 因为Vue的原型上有$on $emit 方法 继承自vue原型上的方法，实现一个发布订阅模式
+Vue.prototype.$EventBus = new Vue()
 new Vue({
   router,
   store,

@@ -485,16 +485,269 @@ v-on="$listeners"
 这对选项需要一起使用，以允许一个祖先组件向其所有子孙后代注入一个依赖，不论组件层次有多深，
 并在起上下游关系成立的时间里始终生效。
 如果你熟悉 React，这与 React 的上下文特性很相似。
+```
+父组件
+<template>
+    <div class="hello">
+        {{msg}}
+        <son></son>
+    </div>
+</template>
+<script>
+    import son from './son.vue'
+    export default {
+        components:{
+            son
+        },
+        provide:{
+            foo: "父亲来了啊，搞事了"
+        },
+        data(){
+            return{
+                msg:"我是父亲"
+            }
+        },
+
+    }
+</script>
+// 子组件
+<template>
+     <div>
+          <span>{{from}}</span>
+     </div>
+</template>
+<script>
+    export default {
+        inject:{
+          from:'foo'
+        },
+        data(){
+          return{
+               sonValue:"我是子组件"
+          }
+        },
+    }
+</script>
+```
+
+### 第十种 EventBus
+EventBus 又称为事件总线。在Vue中可以使用 EventBus 来作为沟通桥梁的概念，
+就像是所有组件共用相同的事件中心，可以向该中心注册发送事件或接收事件，
+所以组件都可以上下平行地通知其他组件，但也就是太方便所以若使用不慎，
+就会造成难以维护的灾难，因此才需要更完善的Vuex作为状态管理中心，将通知的概念上升到共享状态层次。
+
+```
+平常我们采用更多的是父传子，子传父，当遇到兄弟之间的组件通信的时候 就可以使用EventBus
+```
+
+如下例
+Vue.prototype.$EventBus = new Vue()
+这句话的意思是 因为Vue的原型上有$on $emit 方法 继承自vue原型上的方法，实现一个发布订阅模式
+
+```
+main.js
+//这句话的意思是 因为Vue的原型上有$on $emit 方法 继承自vue原型上的方法，实现一个发布订阅模式
+Vue.prototype.$EventBus = new Vue()
+// 父组件-----------------
+<template>
+    <div class="hello">
+        {{msg}}
+        <son></son>
+        <son1></son1>
+    </div>
+</template>
+<script>
+    import son from './son.vue'
+    import son1 from './son1.vue'
+    export default {
+        components:{
+            son,
+            son1
+        },
+        data(){
+            return{
+                msg:"我是父亲"
+            }
+        },
+
+    }
+</script>
+
+子组件son------------------------
+<template>
+     <div>
+          <span>{{sonValue}}</span>
+     </div>
+</template>
+<script>
+    export default {
+        data(){
+          return{
+               sonValue:"我是son1"
+          }
+        },
+         mounted() {
+             this.$EventBus.$on('son1',(val)=>{
+                  this.sonValue = val
+             })
+         }
+    }
+</script>
+
+子组件son1----------------
+<template>
+     <div>
+          <span>{{sonValue}}</span>
+          <button @click="btn">在son1里面改变son的值</button>
+     </div>
+</template>
+<script>
+    export default {
+        data(){
+          return{
+               sonValue:"我是son2"
+          }
+        },
+         methods:{
+             btn(){
+                  this.$EventBus.$emit('son1','在son1里面改变son的值')
+             }
+         }
+    }
+</script>
+```
+### 第十一种 vuex
+Vuex 是什么？
+Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。
+它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化
+
+组成部分
+- state：用于数据的存储，是store中的唯一数据源
+- getters：如vue中的计算属性一样，基于state数据的二次包装，常用于数据的筛选和多个数据的相关性计算
+- mutations：更改 Vuex 的 store 中的状态的唯一方法是提交 mutation，并且不能用于处理异步事件
+- actions：类似于mutation，用于提交mutation来改变状态，而不直接变更状态，可以包含任意异步操作
+- modules：类似于命名空间，用于项目中将各个模块的状态分开定义和操作，便于维护
+
+```
+store.js
+import Vue from 'vue'
+import Vuex from 'vuex'
+Vue.use(Vuex)
+export default new Vuex.Store({
+  state: {
+      son:"",
+      son1:""
+  },
+  mutations: {
+    changeSon(state,val){
+      state.son1 = val
+    }
+  },
+  actions: {
+
+  }
+})
+
+// 父组件
+<template>
+    <div class="hello">
+        {{msg}}
+        <son></son>
+        <son1></son1>
+    </div>
+</template>
+<script>
+    import son from './son.vue'
+    import son1 from './son1.vue'
+    export default {
+        components:{
+            son,
+            son1
+        },
+        data(){
+            return{
+                msg:"我是父亲"
+            }
+        },
+
+    }
+</script>
+
+// 子组件son
+<template>
+     <div>
+          <span>{{sonValue}}</span>
+          <p>接收来自son1的值{{son1}}</p>
+     </div>
+</template>
+<script>
+    export default {
+         data() {
+              return {
+                   sonValue: "我是son1"
+              }
+         },
+         computed: {
+              son1() {
+                   return this.$store.state.son1
+              }
+         }
+    }
+</script>
+
+// 子组件son1
+<template>
+     <div>
+          <span>{{sonValue}}</span>
+          <button @click="btn">在son1里面改变son的值</button>
+     </div>
+</template>
+<script>
+    export default {
+        data(){
+          return{
+               sonValue:"我是son2"
+          }
+        },
+         methods:{
+             btn(){
+                  this.$store.commit('changeSon','哈哈哈哈，收到了吗')
+             }
+         }
+    }
+</script>
+```
 
 
-### 第十种 localStorage /sessionStorage
-这种方式就相对来说比较简单了，但是存储的也想对混乱，不太容易维护，因为五区分模块存储
+### 第十二种 localStorage /sessionStorage
+这种方式就相对来说比较简单了，但是存储的也想对混乱，不太容易维护，因为不区分模块存储
 localStorage.getItem(key)获取数据 通过localStorage.setItem(key,value)存储数据
 ```
-注意用JSON.parse() / JSON.stringify() 做数据格式转换 localStorage / sessionStorage可以结合vuex, 
+因为存储在内存中的需要是字符串，所以需要进行格式转化 
+因此注意用JSON.parse() / JSON.stringify() 做数据格式转换 localStorage / sessionStorage可以结合vuex, 
 实现数据的持久保存,同时使用vuex解决数据和状态混乱问题.
 ```
 
-### 第十一种 cookie 进行存储 同理如上
+### 第十三种 cookie 进行存储 同理如上
+cookie被设计出来的作用就是用于解决 "如何记录客户端的用户信息，
+但是我们也可以用它来进行存储一些信息，进行数据组件之间的共享
+cookie的特点
+- 1.只能使用文本
+- 2 单条存储有大小限制 4KB
+- 3 数量限制(一般浏览器，限制大概在50条左右)
+- 4 读取有域名限制 不可跨域读取，只能由来自 写入cookie的 同一域名 的网页可进行读取。
+- 5 时效限制 每个cookie都有时效，最短的有效期是，会话级别：就是当浏览器关闭，那么cookie立即销毁
+
+### 第十四种 router 在路径上进行传参，
+Vue Router 是 Vue.js 官方的路由管理器。它和 Vue.js 的核心深度集成，让构建单页面应用变得易如反掌。
+可以用router进行传递页面，及组件之间的信息
+
+### 总结如下
+- 在父子组件之间通信：通过props传参;通过ref/$refs, 通过 $parent / $children, provide / inject , $attrs / $listeners,vuex
+ v-model,.sync.....上述所有的方式都适合父子组件之间进行传参
+- 兄弟组件之间进行传参  eventbus vuex router localStorage /sessionStorage cookie
+- 跨级通信 $attrs/$listeners  provide/inject   eventBus Vuex
+ 
+
 
 

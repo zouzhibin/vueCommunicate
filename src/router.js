@@ -70,6 +70,16 @@ export default new Router({
       path: '/provide',
       name: 'provide',
       component: () => import(/* webpackChunkName: "about" */ './components/provide/parent.vue')
+    },
+    {
+      path: '/EventBus',
+      name: 'EventBus',
+      component: () => import(/* webpackChunkName: "about" */ './components/EventBus/parent.vue')
+    },
+    {
+      path: '/Vuex',
+      name: 'Vuex',
+      component: () => import(/* webpackChunkName: "about" */ './components/vuex/parent.vue')
     }
   ]
 })

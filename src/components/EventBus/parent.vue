@@ -2,16 +2,16 @@
     <div class="hello">
         {{msg}}
         <son></son>
+        <son1></son1>
     </div>
 </template>
 <script>
     import son from './son.vue'
+    import son1 from './son1.vue'
     export default {
         components:{
-            son
-        },
-        provide:{
-            foo: "父亲来了啊，搞事了"
+            son,
+            son1
         },
         data(){
             return{
